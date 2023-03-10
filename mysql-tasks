@@ -1,0 +1,51 @@
+Create a directory on the host machine where you want to store the database files. For example:
+
+mkdir C:\Users\nkumarsharma\mysql-data
+
+Start a MySQL container using the --mount or -v flag to mount the directory on the host machine as a volume inside the container. For example:
+
+docker run --name mysql-db -v C:\Users\nkumarsharma\mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest
+
+This command will create a new Docker container named mysql-db and mount the C:\Users\nkumarsharma\mysql-data directory on the host machine as a volume inside the container at the path /var/lib/mysql. We also specify the MySQL root password using the -e flag.
+
+Connect to the MySQL container using the mysql command-line tool to create a new database and table:
+
+docker exec -it mysql-db mysql -p
+This command will start an interactive shell inside the MySQL container and prompt you for the root password. Once you've entered the password, you should see a MySQL command prompt.
+
+Create a new database and table:
+
+CREATE DATABASE mydatabase;
+USE mydatabase;
+CREATE TABLE mytable (id INT, name VARCHAR(50));
+These SQL commands will create a new database named mydatabase and a new table named mytable with two columns: id and name.
+
+Insert some data into the table:
+
+INSERT INTO mytable (id, name) VALUES (1, 'John'), (2, 'Jane'), (3, 'Bob');
+These SQL commands will insert three rows into the mytable table.
+
+SHOW TABLES;
+
+mysql> SELECT * FROM mytable;
+
+Stop and remove the MySQL container:
+
+docker stop mysql-db
+docker rm mysql-db
+These commands will stop and remove the MySQL container, but the database files are still stored on the host machine in the /home/user/mysql-data directory.
+
+Start a new MySQL container and mount the same directory as a volume:
+
+docker run --name mysql-db -v C:\Users\nkumarsharma\mysql-data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest
+
+This command will start a new MySQL container named mysql-db and mount the same directory on the host machine as a volume inside the container. Since the data files are stored in the volume, the new container will have access to the same database and table created earlier.
+
+Connect to the MySQL container and verify that the data is still there:
+
+docker exec -it mysql-db mysql -p
+
+USE mydatabase;
+SELECT * FROM mytable;
+
+These SQL commands will connect to the MySQL container, use the mydatabase database, and select all rows from the mytable table. You should see the same data that was inserted earlier.
