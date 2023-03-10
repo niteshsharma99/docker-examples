@@ -1,0 +1,33 @@
+version: '3'
+services:
+  first:
+    build:
+      context: ./service1
+      dockerfile: Dockerfile
+      args: 
+        - CENTOS_VERSION=${CENTOS_VERSION}
+    image: nitesh99sharma/hello_world:1.0 
+    networks:
+       - mynet
+    ports:
+      - 80:5000
+    # volumes:
+    #   - myvol:/data
+  second:
+    build:
+      context: ./service2
+      dockerfile: Dockerfile
+      args:
+        - CENTOS_VERSION=${CENTOS_VERSION}
+    image: nitesh99sharma/hello_world:2.0
+    # volumes:
+    #    - myvol:/mydata
+    networks:
+       - mynet
+    ports:
+      - 81:5000
+networks:
+  mynet:
+
+# volumes:
+#   myvol

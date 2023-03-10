@@ -1,0 +1,20 @@
+FROM centos:latest
+
+# Update the package repository and install httpd
+
+RUN cd /etc/yum.repos.d/
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+
+RUN yum update -y && \
+    yum install -y httpd && \
+    yum clean all
+
+# Copy the index.html file to the container
+COPY index.html /var/www/html/
+
+# Expose port 80 for incoming HTTP requests
+EXPOSE 80
+
+# Start the httpd service when the container starts
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
